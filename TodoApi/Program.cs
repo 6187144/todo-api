@@ -9,6 +9,10 @@ var dbmsVersion = new MariaDbServerVersion(builder.Configuration.GetValue<string
 var connString = builder.Configuration.GetConnectionString("TodoDbContext");
 
 builder.Services.AddControllers();
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
 builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseMySql(connString, dbmsVersion));
 
@@ -24,7 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

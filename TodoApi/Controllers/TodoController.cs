@@ -83,6 +83,21 @@ namespace TodoApi.Controllers
 
             return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.TodoItemId }, todoItem);
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchTodoItem(uint id)
+        {
+
+            var taskItem = await _context.TodoItems.FindAsync(id);
+            if (taskItem == null)
+            {
+                return NotFound();
+            }
+            taskItem.IsComplete = true;
+            _context.Update(taskItem);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
